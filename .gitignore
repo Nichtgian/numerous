@@ -9,4 +9,4 @@ src/_drafts
 package-lock.json
 
 # backend
-backend/dist/
+src/backend/dist/
