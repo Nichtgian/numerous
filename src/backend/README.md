@@ -1,5 +1,5 @@
 # Numerous - Backend
-install node 
+install node
 
 used versions
 node -v | 12.13.1
@@ -12,8 +12,10 @@ install types for typesscript
 npm install --save-dev @types/node @types/express
 
 run project
-npm run start
+npm start
 
 Libraries
 Node.js
 Express
+typescript
+typeorm w reflect-metadata w mssql driver

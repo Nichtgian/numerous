@@ -1,6 +1,13 @@
 {
   "name": "frontend",
-  "version": "0.1.0",
+  "version": "1.0.0",
+  "description": "numerous - frontend",
+  "keywords": [
+    "numerous",
+    "backend"
+  ],
+  "author": "",
+  "license": "ISC",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
