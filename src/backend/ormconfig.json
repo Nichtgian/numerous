@@ -1,19 +1,19 @@
 {
    "type": "mssql",
-   "host": ".\\SQLEXPRESS",
-   "username": "sa",
+   "host": "localhost",
+   "database": "numerousDB",
+   "username": "numerousSA",
    "password": "1234",
-   "database": "numerousdb",
    "synchronize": true,
-   "logging": false,
+   "logging": true,
    "entities": [
-      "src/entity/**/*.ts"
+      "src/entity/*.ts"
    ],
    "migrations": [
-      "src/migration/**/*.ts"
+      "src/migration/*.ts"
    ],
    "subscribers": [
-      "src/subscriber/**/*.ts"
+      "src/subscriber/*.ts"
    ],
    "cli": {
       "entitiesDir": "src/entity",

@@ -2,31 +2,34 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm";
 import { User } from "./user";
 
 @Entity()
-export class Friendlist {
+export class Message {
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column()
-    seen: boolean;
+    text: string;
 
     @Column()
-    accepted: boolean;
+    sent: Date;
 
     @Column()
-    userId: number;
+    read: boolean;
 
     @Column()
-    friendId: number;
+    senderId: number;
+
+    @Column()
+    receiverId: number;
 
     @ManyToOne(
       type => User,
-      user => user.friendsWith
+      user => user.sentMessages
     )
-    user: User;
+    sender: User;
 
     @ManyToOne(
       type => User,
-      user => user.hasFriends
+      user => user.receivedMessages
     )
-    friend: User;
+    receiver: User;
 }

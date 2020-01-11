@@ -1,18 +1,24 @@
 import "reflect-metadata";
+import * as express from "express";
+import * as bodyParser from "body-parser";
 import { createConnection } from "typeorm";
-import { User } from "./entity/User";
+import { Request, Response } from "express";
+import { Routes } from "./routes";
 
 createConnection().then(async connection => {
-    const user = new User();
-        user.username = "nichtgian";
-        user.email = "nichtgian@gmail.com";
+    const app = express();
+    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({ extended: true }));
 
-    await connection.manager.save(user);
-    console.log("Saved a new user with id: " + user.id);
+    Routes.forEach(route => {
+        app[route.method](route.path, (request: Request, response: Response, next: Function) => {
+            route.action(request, response)
+                .then(() => next)
+                .catch(err => next(err));
+        });
+    });
 
-    const users = await connection.manager.find(User);
-    console.log("Loaded users: ", users);
+    app.listen(5000);
+    console.info("Backend running! port: 5000");
+}).catch(error => console.error(error));
 
-    console.log("Here you can setup and run express/koa/any other framework.");
-
-}).catch(error => console.log(error));
