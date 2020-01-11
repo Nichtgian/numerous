@@ -5,6 +5,8 @@ import { createConnection } from "typeorm";
 import { Request, Response } from "express";
 import { Routes } from "./routes";
 
+import { TestNumerous } from "./model/testNumerous";
+
 createConnection().then(async connection => {
     const app = express();
     app.use(bodyParser.json());
@@ -22,3 +24,4 @@ createConnection().then(async connection => {
     console.info("Backend running! port: 5000");
 }).catch(error => console.error(error));
 
+TestNumerous.runAllTests();

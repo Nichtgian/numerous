@@ -30,13 +30,7 @@ export class Numerous {
     static cardsWithSpecialRules = ["2", "3", "7", "8", "10"];
     static cardsAlwaysPlayable = ["2", "3", "10"];
 
-    deck: Card[];
-
-    constructor() {
-        this.deck = this.initializeDeck();
-    }
-
-    initializeDeck(): Card[] {
+    static initializeDeck(): Card[] {
         let cards: Card[] = [];
         Numerous.suits.forEach(suit => {
             Numerous.ranks.forEach(rank => {
@@ -46,7 +40,24 @@ export class Numerous {
         return cards;
     }
 
-    getTopValueCard(stack: Card[]): Card {
+    static shuffleDeck(cards: Card[]): Card[] {
+        let current = cards.length;
+        let rand;
+        let temp;
+
+        while (0 !== current) {
+            rand = Math.floor(Math.random() * current);
+            current -= 1;
+
+            temp = cards[current];
+            cards[current] = cards[rand];
+            cards[rand] = rand;
+        }
+
+        return cards;
+    }
+
+    static getTopValueCard(stack: Card[]): Card {
         if (stack.length == 0) {
             return null;
         }
@@ -66,8 +77,8 @@ export class Numerous {
         return topCard;
     }
 
-    isCardPlayable(card: Card, stack: Card[]) {
-        const stackTopValueCard = this.getTopValueCard(stack);
+    static isCardPlayable(card: Card, stack: Card[]) {
+        const stackTopValueCard = Numerous.getTopValueCard(stack);
 
         if (stack == null) {
             return true;
@@ -79,33 +90,33 @@ export class Numerous {
             case "10":
                 return true;
             case "7":
-                return this.isCardSmallerThanEqualToStack(card, stackTopValueCard);
+                return Numerous.isCardSmallerThanEqualToStack(card, stackTopValueCard);
             case "8":
-                return this.isCardGreaterThanEqualToStack(card, stackTopValueCard);
+                return Numerous.isCardGreaterThanEqualToStack(card, stackTopValueCard);
             default:
-                return this.isCardGreaterThanEqualToStack(card, stackTopValueCard);
+                return Numerous.isCardGreaterThanEqualToStack(card, stackTopValueCard);
         }
     }
 
-    isCardAlwaysPlayable(card: Card): boolean {
+    static isCardAlwaysPlayable(card: Card): boolean {
         return Numerous.cardsAlwaysPlayable.indexOf(card.rank.code) != -1;
     }
 
-    hasCardSpecialRules(card: Card): boolean {
+    static hasCardSpecialRules(card: Card): boolean {
         return Numerous.cardsWithSpecialRules.indexOf(card.rank.code) != -1;
     }
 
-    isCardGreaterThanEqualToStack(card: Card, stackTopValueCard: Card): boolean {
-        const cardValueIndex = Numerous.ranks.indexOf(card.rank);
-        const stackValueIndex = Numerous.ranks.indexOf(stackTopValueCard.rank);
-
-        return cardValueIndex <= stackValueIndex;
-    }
-
-    isCardSmallerThanEqualToStack(card: Card, stackTopValueCard: Card): boolean {
+    static isCardGreaterThanEqualToStack(card: Card, stackTopValueCard: Card): boolean {
         const cardValueIndex = Numerous.ranks.indexOf(card.rank);
         const stackValueIndex = Numerous.ranks.indexOf(stackTopValueCard.rank);
 
         return cardValueIndex >= stackValueIndex;
+    }
+
+    static isCardSmallerThanEqualToStack(card: Card, stackTopValueCard: Card): boolean {
+        const cardValueIndex = Numerous.ranks.indexOf(card.rank);
+        const stackValueIndex = Numerous.ranks.indexOf(stackTopValueCard.rank);
+
+        return cardValueIndex <= stackValueIndex;
     }
 }
