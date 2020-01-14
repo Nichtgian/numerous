@@ -24,6 +24,8 @@ export class LoginController {
     }
 
     static async register(req: Request, res: Response) {
+        console.log(req.body);
+
         const { username, password } = req.body;
 
         try {

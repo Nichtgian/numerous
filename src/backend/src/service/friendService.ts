@@ -10,7 +10,7 @@ export class FriendService {
 
     static async getFriendsBy(filter): Promise<Friend[]> {
         const repository = getManager().getRepository(Friend);
-        return await repository.find(filter);
+        return await repository.find({ where: filter, relations: ["user", "friend"] });
     }
 
     static async getFriendBy(filter): Promise<Friend> {

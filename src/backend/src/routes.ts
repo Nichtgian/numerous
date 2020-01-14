@@ -1,5 +1,6 @@
 import { LoginController } from "./controller/loginController";
 import { SocialController } from "./controller/socialController";
+import {UserService} from "./service/userService";
 
 const url = "/api/";
 
@@ -18,6 +19,16 @@ export const Routes = [
         path: url + "social/addFriend/:id",
         method: "get",
         action: SocialController.addFriend
+    },
+    {
+        path: url + "social/searchUser/:id",
+        method: "get",
+        action: SocialController.searchUser
+    },
+    {
+        path: url + "social/getFriends",
+        method: "get",
+        action: SocialController.getFriends
     },
     {
         path: url + "social/removeFriend/:id",

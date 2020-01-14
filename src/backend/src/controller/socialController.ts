@@ -19,6 +19,40 @@ export class SocialController {
         }
     }
 
+    static async getFriends(req: Request, res: Response) {
+        const token = req.headers.authorization;
+
+        try {
+            const decodedToken = UserService.verifyToken(token);
+            const user = await UserService.getUserBy({ username: decodedToken.username });
+            let friends = await FriendService.getFriendsBy({ userId: user.id, accepted: true });
+            friends.forEach((friend) => {
+                friend.friend.password = "";
+                friend.friend.salt = "";
+                friend.user.password = "";
+                friend.user.salt = "";
+            });
+
+            res.send(friends);
+        } catch {
+            return res.status(500).end();
+        }
+    }
+
+    static async searchUser(req: Request, res: Response) {
+        const username = req.params.id;
+
+        try {
+            const user = await UserService.getUserBy({ username: username});
+            user.password = "";
+            user.salt = "";
+
+            res.send(user);
+        } catch {
+            return res.status(500).end();
+        }
+    }
+
     static async removeFriend(req: Request, res: Response) {
         const token = req.headers.authorization;
         const friendId = req.params.id;
