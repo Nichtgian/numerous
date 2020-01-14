@@ -10,7 +10,12 @@ export class FriendService {
 
     static async getFriendsBy(filter): Promise<Friend[]> {
         const repository = getManager().getRepository(Friend);
-        return await repository.find({ where: filter, relations: ["user", "friend"] });
+        return await repository.find(filter);
+    }
+
+    static async getFriendsByIncludeRelations(filter, relations): Promise<Friend[]> {
+        const repository = getManager().getRepository(Friend);
+        return await repository.find({ where: filter, relations: relations });
     }
 
     static async getFriendBy(filter): Promise<Friend> {
@@ -25,8 +30,8 @@ export class FriendService {
         const friend = new Friend();
         friend.userId = user.id;
         friend.friendId = friendId;
-        friend.accepted = false;
-        friend.seen = false;
+        friend.accepted = true;
+        friend.seen = true;
 
         await repository.manager.save(friend);
     }

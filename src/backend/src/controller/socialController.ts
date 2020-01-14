@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { FriendService } from "../service/friendService";
 import { UserService } from "../service/userService";
 import { MessageService } from "../service/messageService";
+import { Message } from "../entity/message";
 
 export class SocialController {
 
@@ -25,7 +26,7 @@ export class SocialController {
         try {
             const decodedToken = UserService.verifyToken(token);
             const user = await UserService.getUserBy({ username: decodedToken.username });
-            let friends = await FriendService.getFriendsBy({ userId: user.id, accepted: true });
+            let friends = await FriendService.getFriendsByIncludeRelations({ userId: user.id }, ["user", "friend"]);
             friends.forEach((friend) => {
                 friend.friend.password = "";
                 friend.friend.salt = "";
@@ -53,6 +54,55 @@ export class SocialController {
         }
     }
 
+    static async searchUserAndChat(req: Request, res: Response) {
+        const username = req.body.username;
+        const withUserId = req.body.withUserId;
+
+        try {
+            const user = await UserService.getUserByIncludeRelations({ id: withUserId }, ["sentMessages", "receivedMessages"]);
+            const userFilter = await UserService.getUserBy({ username: username });
+            const friend = await FriendService.getFriendBy({ userId: userFilter.id, friendId: user.id });
+
+            user.password = "";
+            user.salt = "";
+
+            let filteredSentMessages = [];
+            let filteredReceivedMessages = [];
+            user.sentMessages.forEach(message => {
+                if (message.receiverId == userFilter.id) {
+                    filteredSentMessages.push(message);
+                }
+            });
+            user.receivedMessages.forEach(message => {
+                if (message.senderId == userFilter.id) {
+                    filteredReceivedMessages.push(message);
+                }
+            });
+
+            let messages = filteredSentMessages.concat(filteredReceivedMessages);
+            messages.sort(this.sortMessage);
+
+            res.send({ user: user, messages: messages, alreadyFriends: friend != undefined });
+
+        } catch {
+            return res.status(500).end();
+        }
+    }
+
+    static sortMessage(a: Message, b: Message) {
+        const sentA = a.sent;
+        const sentB = b.sent;
+
+        let comparison = 0;
+        if (sentA > sentB) {
+            comparison = 1;
+        } else if (sentA < sentB) {
+            comparison = -1;
+        }
+
+        return comparison;
+    }
+
     static async removeFriend(req: Request, res: Response) {
         const token = req.headers.authorization;
         const friendId = req.params.id;
@@ -69,11 +119,11 @@ export class SocialController {
 
     static async sendMessage(req: Request, res: Response) {
         const token = req.headers.authorization;
-        const { friendId, text } = req.body;
+        const { receiverId, text } = req.body;
 
         try {
             const decodedToken = UserService.verifyToken(token);
-            await MessageService.sendMessage(decodedToken.username, friendId, text);
+            await MessageService.sendMessage(decodedToken.username, receiverId, text);
 
             res.send();
         } catch {

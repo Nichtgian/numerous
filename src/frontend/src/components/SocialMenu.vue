@@ -3,8 +3,8 @@
         <v-dialog v-model="showDialog" persistent max-width="600px">
             <v-card>
                 <v-tabs fixed-tabs background-color="primary" dark>
-                    <v-tab>Messages</v-tab>
-                    <v-tab>Search Users</v-tab>
+                    <v-tab>Your Friends <v-icon right>mdi-account-group-outline</v-icon></v-tab>
+                    <v-tab>Search User <v-icon right>mdi-account-search-outline</v-icon></v-tab>
                     <v-tab-item>
                         <v-container>
                             <template v-if="loading">
@@ -13,7 +13,7 @@
 
                             <template v-else>
                                 <template v-if="friends == null || friends == []">
-                                    <h2>No results.</h2>
+                                    <h2>No friends.</h2>
                                 </template>
                                 <v-list v-else>
                                     <v-list-item v-for="friend in friends" :key="friend.id" @click="openChat(friend.id)">
@@ -22,7 +22,7 @@
                                         </v-list-item-content>
 
                                         <v-list-item-icon>
-                                            <v-icon color="primary">mdi-comment-outline</v-icon>
+                                            <v-icon color="primary">mdi-clipboard-account-outline</v-icon>
                                         </v-list-item-icon>
                                     </v-list-item>
                                 </v-list>
@@ -48,7 +48,7 @@
                                         </v-list-item-content>
 
                                         <v-list-item-icon>
-                                            <v-icon color="primary">mdi-comment-outline</v-icon>
+                                            <v-icon color="primary">mdi-clipboard-account-outline</v-icon>
                                         </v-list-item-icon>
                                     </v-list-item>
                                 </v-list>
@@ -58,7 +58,14 @@
                 </v-tabs>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="error" @click="showDialog=false">Close</v-btn>
+                    <v-tooltip bottom>
+                        <template v-slot:activator="{ on }">
+                            <v-btn color="error" outlined v-on="on" @click="showDialog=false">
+                                <v-icon right>mdi-close</v-icon>
+                            </v-btn>
+                        </template>
+                        <span>Close Menu</span>
+                    </v-tooltip>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -79,7 +86,7 @@
             }
         },
         created() {
-            this.loadFriends()
+            this.loadFriends();
         },
         props: {
             value: Boolean
@@ -87,16 +94,20 @@
         computed: {
             showDialog: {
                 get () {
-                    return this.value
+                    if (this.value) {
+                        this.loadFriends();
+                    }
+                    return this.value;
                 },
                 set (value) {
-                    this.$emit("input", value)
+                    this.$emit("input", value);
                 }
             }
         },
         methods: {
             openChat(friendId) {
-                alert(friendId);
+                this.$emit("input", false);
+                this.$emit("openUserProfile", friendId);
             },
             loadFriends() {
                 this.loading = true;

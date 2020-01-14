@@ -15,9 +15,19 @@ export class UserService {
         return await repository.find(filter);
     }
 
+    static async getUsersByIncludeRelations(filter, relations): Promise<User[]> {
+        const repository = getManager().getRepository(User);
+        return await repository.find({ where: filter, relations: relations });
+    }
+
     static async getUserBy(filter): Promise<User> {
         const repository = getManager().getRepository(User);
         return await repository.findOne(filter);
+    }
+
+    static async getUserByIncludeRelations(filter, relations): Promise<User> {
+        const repository = getManager().getRepository(User);
+        return await repository.findOne({ where: filter, relations: relations });
     }
 
     static async registerUser(username, password) {

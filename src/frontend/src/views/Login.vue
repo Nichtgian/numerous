@@ -21,17 +21,23 @@
                     </v-row>
                     <v-row>
                         <v-col>
-                            <v-btn color="primary" width="100%" @click="login">Login</v-btn>
+                            <v-btn color="primary" width="100%" @click="login">
+                                Login <v-icon right>mdi-account-outline</v-icon>
+                            </v-btn>
                         </v-col>
                     </v-row>
                     <v-row>
                         <v-col>
-                            <v-btn outlined color="primary" width="100%" @click="playAsGuest">Play as Guest</v-btn>
+                            <v-btn outlined color="primary" width="100%" @click="playAsGuest">
+                                Play as Guest <v-icon right>mdi-account-off-outline</v-icon>
+                            </v-btn>
                         </v-col>
                     </v-row>
                     <v-row>
                         <v-col>
-                            <v-btn outlined color="secondary" width="100%" to="/register">Register</v-btn>
+                            <v-btn outlined color="secondary" width="100%" to="/register">
+                                Register <v-icon right>mdi-account-plus-outline</v-icon>
+                            </v-btn>
                         </v-col>
                     </v-row>
                 </v-container>
@@ -49,8 +55,8 @@
         data: () => {
             return {
                 user: {
-                    username: "admin",
-                    password: "1234"
+                    username: "",
+                    password: ""
                 },
                 loginErrorMessage: ""
             };

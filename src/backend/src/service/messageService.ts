@@ -20,8 +20,10 @@ export class MessageService {
         message.senderId = sender.id;
         message.receiverId = receivedId;
         message.text = text;
-        message.read = false;
+        message.read = true;
         message.sent = new Date(Date.now());
+
+        console.log(message);
 
         await repository.manager.save(message);
     }

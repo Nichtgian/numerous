@@ -1,6 +1,5 @@
 import { LoginController } from "./controller/loginController";
 import { SocialController } from "./controller/socialController";
-import {UserService} from "./service/userService";
 
 const url = "/api/";
 
@@ -44,5 +43,10 @@ export const Routes = [
         path: url + "social/markMessagesAsRead",
         method: "post",
         action: SocialController.markMessagesAsRead
+    },
+    {
+        path: url + "social/searchUserAndChat",
+        method: "post",
+        action: SocialController.searchUserAndChat
     }
 ];
