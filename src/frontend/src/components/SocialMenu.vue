@@ -22,7 +22,7 @@
                                         </v-list-item-content>
 
                                         <v-list-item-icon>
-                                            <v-icon color="primary">mdi-clipboard-account-outline</v-icon>
+                                            <v-icon color="primary">mdi-chat-outline</v-icon>
                                         </v-list-item-icon>
                                     </v-list-item>
                                 </v-list>
@@ -48,7 +48,7 @@
                                         </v-list-item-content>
 
                                         <v-list-item-icon>
-                                            <v-icon color="primary">mdi-clipboard-account-outline</v-icon>
+                                            <v-icon color="primary">mdi-chat-outline</v-icon>
                                         </v-list-item-icon>
                                     </v-list-item>
                                 </v-list>
@@ -57,7 +57,6 @@
                     </v-tab-item>
                 </v-tabs>
                 <v-card-actions>
-                    <v-spacer></v-spacer>
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on }">
                             <v-btn color="error" outlined v-on="on" @click="showDialog=false">
@@ -105,9 +104,9 @@
             }
         },
         methods: {
-            openChat(friendId) {
+            openChat(userId) {
                 this.$emit("input", false);
-                this.$emit("openUserProfile", friendId);
+                this.$emit("openUserProfile", userId);
             },
             loadFriends() {
                 this.loading = true;

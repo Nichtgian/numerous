@@ -16,14 +16,14 @@
             <ProfileMenu v-model="showPlayerMenu" :userId="selectedUserId"/>
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
-                <v-btn color="primary" outlined v-on="on" @click="showSocialMenu=!showSocialMenu"><v-icon>mdi-chat-outline</v-icon></v-btn>
+                <v-btn color="primary" outlined v-on="on" @click="showSocialMenu=!showSocialMenu"><v-icon>mdi-account-outline</v-icon></v-btn>
               </template>
               <span>Open Social Menu</span>
             </v-tooltip>
           </div>
         </v-card-title>
         <v-card-text>
-          <Game></Game>
+          <Numerous @openUserProfile="openUserProfile"></Numerous>
         </v-card-text>
       </v-responsive>
     </v-card>
@@ -35,7 +35,7 @@
   import router from "@/router";
   import SocialMenu from "@/components/SocialMenu";
   import ProfileMenu from "@/components/ProfileMenu";
-  import Game from "@/components/Game";
+  import Numerous from "@/components/Numerous";
   import Store from "../store";
 
   export default {
@@ -43,7 +43,7 @@
     components: {
       SocialMenu,
       ProfileMenu,
-      Game
+      Numerous
     },
     data: () => {
       return {

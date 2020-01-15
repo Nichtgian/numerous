@@ -23,7 +23,7 @@ yarn-error.log*
 *.sw?
 
 # backend
-dist/
+src/backend/dist/
 build/
 tmp/
 temp/

@@ -8,15 +8,24 @@ import * as cors from "cors";
 import { TestNumerous } from "./model/testNumerous";
 import { Helper } from "./helper";
 import { Routes } from "./routes";
+import { SocketController } from "./controller/socketController";
+
+const app = express();
+const server = require("http").Server(app);
+const io = require("socket.io")(server);
+
+const localUrl = "http://localhost:8080";
+const corsOptions = {
+    origin: localUrl,
+    credentials: true,
+    optionsSuccessStatus: 200
+};
 
 createConnection().then(async connection => {
-    const app = express();
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: true }));
-    app.use(cors());
-
-    const http = require("http").Server(app);
-    const io = require("socket.io")(http);
+    app.use(cors(corsOptions));
+    app.use(express.static("../frontend/dist"));
 
     Routes.forEach(route => {
         app[route.method](route.path, (request: Request, response: Response, next: Function) => {
@@ -26,13 +35,9 @@ createConnection().then(async connection => {
         });
     });
 
-    io.on("connection", socket => {
-        console.log("a user connected");
-    });
+    io.on("connection", SocketController);
 
-    app.use(express.static("../frontend/dist"));
-
-    app.listen(Helper.port);
+    server.listen(Helper.port);
     console.info("Backend running! port: " + Helper.port);
 
 }).catch(error => console.error(error));

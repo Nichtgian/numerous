@@ -80,27 +80,15 @@ export class SocialController {
             });
 
             let messages = filteredSentMessages.concat(filteredReceivedMessages);
-            messages.sort(this.sortMessage);
+            messages.sort((a: Message, b: Message) => {
+                return a.sent.getTime() - b.sent.getTime();
+            });
 
             res.send({ user: user, messages: messages, alreadyFriends: friend != undefined });
 
         } catch {
             return res.status(500).end();
         }
-    }
-
-    static sortMessage(a: Message, b: Message) {
-        const sentA = a.sent;
-        const sentB = b.sent;
-
-        let comparison = 0;
-        if (sentA > sentB) {
-            comparison = 1;
-        } else if (sentA < sentB) {
-            comparison = -1;
-        }
-
-        return comparison;
     }
 
     static async removeFriend(req: Request, res: Response) {

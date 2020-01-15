@@ -10,7 +10,9 @@
             </v-card>
 
             <v-card v-else>
-                <v-card-title>{{ user.username }}</v-card-title>
+                <div>
+                    <v-card-title style="background-color: #3f51b5; color: white" dark>{{ user.username }}</v-card-title>
+                </div>
 
                 <v-list style="max-height: 400px" class="overflow-y-auto" dense>
                     <v-list-item v-for="message in messages" :key="message.id">
@@ -30,9 +32,6 @@
                 </v-container>
 
                 <v-card-actions>
-                    <v-btn color="success" width="40%" v-if="!alreadyFriends" outlined @click="friendRequest">Send friend request</v-btn>
-                    <v-btn color="error" width="40%" v-else outlined @click="removeFriend">Remove friend</v-btn>
-                    <v-spacer></v-spacer>
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on }">
                             <v-btn color="error" outlined v-on="on" @click="showDialog=false">
@@ -41,6 +40,9 @@
                         </template>
                         <span>Close Menu</span>
                     </v-tooltip>
+                    <v-spacer></v-spacer>
+                    <v-btn color="success" v-if="!alreadyFriends" outlined @click="friendRequest">Add friend</v-btn>
+                    <v-btn color="error" v-else outlined @click="removeFriend">Remove friend</v-btn>
                 </v-card-actions>
             </v-card>
 
@@ -50,11 +52,13 @@
 
 <script>
     import { SocialService } from "../services/socialService";
+    import Store from "../store";
 
     export default {
         name: "ProfileMenu",
         data: () => {
             return {
+                isConnected: false,
                 loading: false,
                 user: null,
                 messages: [],
@@ -65,6 +69,19 @@
         props: {
             value: Boolean,
             userId: Number
+        },
+        sockets: {
+            connect() {
+                this.isConnected = true;
+            },
+            disconnect() {
+                this.isConnected = false;
+            },
+            newMessage(receivername) {
+                if (Store.state.user.username == receivername) {
+                    this.loadUser();
+                }
+            },
         },
         computed: {
             showDialog: {
@@ -121,6 +138,8 @@
                     this.loadUser();
                     this.text = "";
                     this.loading = false;
+
+                    this.$socket.emit("sendMessage", this.user.username);
                 }));
             }
         }
