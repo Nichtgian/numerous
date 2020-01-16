@@ -55,8 +55,8 @@
         data: () => {
             return {
                 user: {
-                    username: "admin",
-                    password: "1234"
+                    username: "",
+                    password: ""
                 },
                 loginErrorMessage: ""
             };
