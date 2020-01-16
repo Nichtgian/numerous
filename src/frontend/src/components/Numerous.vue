@@ -3,7 +3,7 @@
             <v-card v-if="joinedLobbyData == null">
                 <v-responsive>
                     <v-card-title>
-                        <h2>Lobbybrowser</h2>
+                        <h3>Lobbybrowser</h3>
                         <v-spacer></v-spacer>
                         <v-tooltip bottom>
                             <template v-slot:activator="{ on }">
@@ -41,8 +41,16 @@
             <v-card v-else>
                 <v-responsive>
                     <v-card-title>
-                        <h2>Lobby {{ this.joinedLobbyData.name }}</h2>
+                        <h3>Lobby {{ this.joinedLobbyData.name }}</h3>
                         <v-spacer></v-spacer>
+                        <v-tooltip bottom v-if="isPlayerLeader">
+                            <template v-slot:activator="{ on }">
+                                <v-btn color="primary" outlined v-on="on" style="margin-right: 10px;" @click="startGame">
+                                    Start Game<v-icon right>mdi-play</v-icon>
+                                </v-btn>
+                            </template>
+                            <span>Start numerous card game</span>
+                        </v-tooltip>
                         <v-tooltip bottom>
                             <template v-slot:activator="{ on }">
                                 <v-btn color="success" outlined v-on="on" @click="refreshLobby" style="margin-right: 10px;"><v-icon>mdi-reload</v-icon></v-btn>
@@ -96,7 +104,9 @@
                     isPrivate: false,
                 },
                 showCreateLobby: false,
-                joinedLobbyData: null
+                joinedLobbyData: null,
+                player: null,
+                isPlayerLeader: false
             }
         },
         created() {
@@ -116,10 +126,14 @@
                 this.lobbies = data;
             },
             joinedLobby(data) {
-                this.joinedLobbyData = data;
+                this.joinedLobbyData = data.lobby;
+                this.player = data.player;
+                this.isPlayerLeader =  this.joinedLobbyData.leaderId == this.player.id;
             },
             leftLobby() {
                 this.joinedLobbyData = null;
+                this.player = null;
+                this.isPlayerLeader =  false;
                 this.$socket.emit("getLobbies");
             },
             updateLobbies() {
@@ -127,6 +141,7 @@
             },
             updateLobby(data) {
                 this.joinedLobbyData = data;
+                this.isPlayerLeader =  this.joinedLobbyData.leaderId == this.player.id;
             }
         },
         methods: {
@@ -148,7 +163,6 @@
             },
             joinLobbyWithPassword(lobby, password) {
                 let username = Store.state.user.username;
-
                 this.$socket.emit("joinLobby", lobby, username, password);
             },
             leaveLobby() {
@@ -167,6 +181,11 @@
                 }
             },
             refreshLobby() {
+                if (this.joinedLobbyData != null) {
+                    this.$socket.emit("refreshLobby", this.joinedLobbyData.id);
+                }
+            },
+            startGame() {
             }
         }
     }

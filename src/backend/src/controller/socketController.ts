@@ -17,7 +17,9 @@ export const SocketController = (socket) => {
                 id: lobby.id,
                 name: lobby.name,
                 isPrivate: lobby.isPrivate,
-                players: lobby.players
+                players: lobby.players,
+                leaderId: lobby.leaderId,
+                playing: lobby.playing
             }
         });
 
@@ -31,15 +33,19 @@ export const SocketController = (socket) => {
             return;
         }
 
-        if (lobby.join(socket.id, username, password)) {
+        const player = lobby.join(socket.id, username, password);
+
+        if (player != null) {
             const joinedLobby = {
                 id: lobby.id,
                 name: lobby.name,
                 isPrivate: lobby.isPrivate,
-                players: lobby.players
+                players: lobby.players,
+                leaderId: lobby.leaderId,
+                playing: lobby.playing
             };
 
-            socket.emit("joinedLobby", joinedLobby);
+            socket.emit("joinedLobby", { lobby: joinedLobby, player: player });
             socket.to(lobby.id).emit("updateLobby", joinedLobby);
             socket.join(lobby.id);
 
@@ -67,7 +73,9 @@ export const SocketController = (socket) => {
                 id: lobby.id,
                 name: lobby.name,
                 isPrivate: lobby.isPrivate,
-                players: lobby.players
+                players: lobby.players,
+                leaderId: lobby.leaderId,
+                playing: lobby.playing
             });
 
             socket.broadcast.emit("updateLobbies");
@@ -76,6 +84,20 @@ export const SocketController = (socket) => {
 
     socket.on("sendMessage", (receivername) => {
         socket.broadcast.emit("newMessage", receivername);
+    });
+
+    socket.on("refreshLobby", lobbyId => {
+        const lobby = lobbies.find(lobby => lobby.id == lobbyId);
+        if (lobby != undefined) {
+            socket.to(lobby.id).emit("updateLobby", {
+                id: lobby.id,
+                name: lobby.name,
+                isPrivate: lobby.isPrivate,
+                players: lobby.players,
+                leaderId: lobby.leaderId,
+                playing: lobby.playing
+            });
+        }
     });
 
     socket.on("disconnect", () => {
@@ -92,7 +114,9 @@ export const SocketController = (socket) => {
                 id: lobby.id,
                 name: lobby.name,
                 isPrivate: lobby.isPrivate,
-                players: lobby.players
+                players: lobby.players,
+                leaderId: lobby.leaderId,
+                playing: lobby.playing
             });
         });
 

@@ -3,7 +3,7 @@
         <v-dialog v-model="showDialog" persistent max-width="600px">
             <v-card>
                 <div>
-                    <v-card-title style="background-color: #3f51b5; color: white" dark>Create Lobby</v-card-title>
+                    <v-card-title style="background-color: #6a1b9a; color: white" dark>Create Lobby</v-card-title>
                 </div>
 
                 <v-form>

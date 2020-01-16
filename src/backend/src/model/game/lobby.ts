@@ -23,20 +23,21 @@ export class Lobby {
 
     join(playerId: string, username: string, password: string) {
         if (this.playing) {
-            return false;
+            return null;
         }
 
         if (this.isPrivate && this.password != password) {
-            return false;
+            return null;
         }
 
-        this.players.push(new Player(playerId, username));
+        const player = new Player(playerId, username);
+        this.players.push(player);
 
         if (this.leaderId == null) {
-            this.leaderId = playerId;
+            this.leaderId = player.id;
         }
 
-        return true;
+        return player;
     }
 
     leave(playerId: string) {
@@ -50,9 +51,7 @@ export class Lobby {
 
         if (this.leaderId == playerId) {
             if (this.players.length >= 2 || !this.playing && this.players.length >= 1) {
-                this.leaderId = this.players[1].id;
-            } else {
-                // remove
+                this.leaderId = this.players[0].id;
             }
         }
 

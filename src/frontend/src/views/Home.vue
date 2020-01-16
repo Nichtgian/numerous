@@ -3,7 +3,7 @@
     <v-card>
       <v-responsive>
         <v-card-title>
-          <h1>Home</h1>
+          <h2>Home</h2>
           <v-spacer></v-spacer>
           <v-tooltip bottom>
             <template v-slot:activator="{ on }">
@@ -11,14 +11,18 @@
             </template>
             <span>Logout</span>
           </v-tooltip>
+          <v-tooltip bottom>
+            <template v-slot:activator="{ on }">
+              <v-btn color="primary" outlined v-on="on" style="margin-right: 10px;" @click="showInfoMenu=!showInfoMenu"><v-icon>mdi-book-open-outline</v-icon></v-btn>
+            </template>
+            <span>Show information and rules menu</span>
+          </v-tooltip>
           <div v-if="!user.isGuest">
-            <SocialMenu v-model="showSocialMenu" @openUserProfile="openUserProfile"/>
-            <ProfileMenu v-model="showPlayerMenu" :userId="selectedUserId"/>
             <v-tooltip bottom>
               <template v-slot:activator="{ on }">
                 <v-btn color="primary" outlined v-on="on" @click="showSocialMenu=!showSocialMenu"><v-icon>mdi-account-outline</v-icon></v-btn>
               </template>
-              <span>Open Social Menu</span>
+              <span>Open social Menu</span>
             </v-tooltip>
           </div>
         </v-card-title>
@@ -27,6 +31,10 @@
         </v-card-text>
       </v-responsive>
     </v-card>
+
+    <SocialMenu v-model="showSocialMenu" @openUserProfile="openUserProfile"/>
+    <ProfileMenu v-model="showPlayerMenu" :userId="selectedUserId"/>
+    <InfoMenu v-model="showInfoMenu"/>
   </v-container>
 </template>
 
@@ -35,6 +43,7 @@
   import router from "@/router";
   import SocialMenu from "@/components/SocialMenu";
   import ProfileMenu from "@/components/ProfileMenu";
+  import InfoMenu from "@/components/InfoMenu";
   import Numerous from "@/components/Numerous";
   import Store from "../store";
 
@@ -43,12 +52,14 @@
     components: {
       SocialMenu,
       ProfileMenu,
+      InfoMenu,
       Numerous
     },
     data: () => {
       return {
         showSocialMenu: false,
         showPlayerMenu: false,
+        showInfoMenu: false,
         selectedUserId: 0,
         user: null
       };

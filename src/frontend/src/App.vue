@@ -1,9 +1,8 @@
 <template>
   <v-app>
     <v-app-bar app color="primary" dark>
-      <div class="d-flex align-center">
-        Numerous
-      </div>
+      <img height="100%" alt="Vue logo" src="./assets/numerous.svg">
+      <h1>Numerous</h1>
     </v-app-bar>
 
     <v-content>

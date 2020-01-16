@@ -11,7 +11,7 @@
 
             <v-card v-else>
                 <div>
-                    <v-card-title style="background-color: #3f51b5; color: white" dark>{{ user.username }}</v-card-title>
+                    <v-card-title style="background-color: #6a1b9a; color: white" dark>{{ user.username }}</v-card-title>
                 </div>
 
                 <v-list style="max-height: 400px" class="overflow-y-auto" dense>
