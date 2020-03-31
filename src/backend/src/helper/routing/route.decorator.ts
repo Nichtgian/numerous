@@ -1,0 +1,20 @@
+import { IRouteDefinition } from "./IRouteDefinition";
+import { HttpMethod } from "../enum/httpMethod.enum";
+import { GeneralHelper } from "../general.helper";
+
+export const Route = (method: HttpMethod, url: string): MethodDecorator => {
+    return (target: any, propertyKey: string): void => {
+        if (!Reflect.hasMetadata(GeneralHelper.routeMeta, target.constructor)) 
+            Reflect.defineMetadata(GeneralHelper.routeMeta, [], target.constructor);
+
+        const routes: IRouteDefinition[] = Reflect.getMetadata(GeneralHelper.routeMeta, target.constructor) as IRouteDefinition[];
+
+        routes.push({
+            method: method,
+            url: url,
+            name: propertyKey
+        });
+
+        Reflect.defineMetadata(GeneralHelper.routeMeta, routes, target.constructor);
+    };
+};

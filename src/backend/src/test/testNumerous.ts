@@ -1,5 +1,5 @@
-import { Card } from "./numerous/card";
-import { Numerous } from "./numerous/numerous";
+import { Card } from "../model/logic/numerous/card";
+import { Numerous } from "../model/logic/numerous/numerous";
 
 export class TestNumerous {
 

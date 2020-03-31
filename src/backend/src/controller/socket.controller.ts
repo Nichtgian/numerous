@@ -1,17 +1,19 @@
-import { Lobby } from "../model/game/lobby";
+import { Lobby } from "../model/logic/game/lobby";
+import { SocketOnEvent } from "../helper/enum/socketOnEvent.enum";
+import { SocketEmitEvent } from "../helper/enum/socketEmitEvent.enum";
 
 let lobbies: Lobby[] = [];
 
 export const SocketController = (socket) => {
-    socket.on("createLobby", (data) => {
+    socket.on(SocketOnEvent.CreateLobby, (data) => {
         const createdLobby = new Lobby(data.name, data.password, data.isPrivate);
         lobbies.push(createdLobby);
 
-        socket.emit("createdLobby", { id: createdLobby.id, isPrivate: createdLobby.isPrivate, password: createdLobby.password });
-        socket.broadcast.emit("updateLobbies");
+        socket.emit(SocketEmitEvent.CreatedLobby, { id: createdLobby.id, isPrivate: createdLobby.isPrivate, password: createdLobby.password });
+        socket.broadcast.emit(SocketEmitEvent.UpdateLobbies);
     });
 
-    socket.on("getLobbies", () => {
+    socket.on(SocketOnEvent.GetLobbies, () => {
         const allLobbies = lobbies.map(lobby => {
             return {
                 id: lobby.id,
@@ -23,10 +25,10 @@ export const SocketController = (socket) => {
             }
         });
 
-        socket.emit("allLobbies", allLobbies);
+        socket.emit(SocketEmitEvent.AllLobbies, allLobbies);
     });
 
-    socket.on("joinLobby", (lobbyId: string, username: string, password: string) => {
+    socket.on(SocketOnEvent.JoinLobby, (lobbyId: string, username: string, password: string) => {
         const lobby = lobbies.find(lobby => lobby.id == lobbyId);
 
         if (lobby == undefined) {
@@ -45,14 +47,13 @@ export const SocketController = (socket) => {
                 playing: lobby.playing
             };
 
-            socket.emit("joinedLobby", { lobby: joinedLobby, player: player });
-            socket.to(lobby.id).emit("updateLobby", joinedLobby);
+            socket.emit(SocketEmitEvent.JoinedLobby, { lobby: joinedLobby, player: player });
+            socket.to(lobby.id).emit(SocketEmitEvent.UpdateLobby, joinedLobby);
             socket.join(lobby.id);
-
         }
     });
 
-    socket.on("leaveLobby", (lobbyId: string) => {
+    socket.on(SocketOnEvent.LeaveLobby, (lobbyId: string) => {
         const lobby = lobbies.find(lobby => lobby.id == lobbyId);
 
         if (lobby == undefined) {
@@ -61,7 +62,7 @@ export const SocketController = (socket) => {
 
         if (socket != undefined) {
             if (lobby.leave(socket.id)) {
-                socket.emit("leftLobby");
+                socket.emit(SocketEmitEvent.LeftLobby);
             }
             if (lobby.players.length <= 0) {
                 const lobbyIndex = lobbies.findIndex(lobby => lobby.id == lobbyId);
@@ -69,7 +70,7 @@ export const SocketController = (socket) => {
             }
 
             socket.leave(lobby.id);
-            socket.to(lobby.id).emit("updateLobby", {
+            socket.to(lobby.id).emit(SocketEmitEvent.UpdateLobby, {
                 id: lobby.id,
                 name: lobby.name,
                 isPrivate: lobby.isPrivate,
@@ -78,18 +79,18 @@ export const SocketController = (socket) => {
                 playing: lobby.playing
             });
 
-            socket.broadcast.emit("updateLobbies");
+            socket.broadcast.emit(SocketEmitEvent.UpdateLobbies);
         }
     });
 
-    socket.on("sendMessage", (receivername) => {
-        socket.broadcast.emit("newMessage", receivername);
+    socket.on(SocketOnEvent.SendMessage, (receivername) => {
+        socket.broadcast.emit(SocketEmitEvent.NewMessage, receivername);
     });
 
-    socket.on("refreshLobby", lobbyId => {
+    socket.on(SocketOnEvent.RefreshLobby, lobbyId => {
         const lobby = lobbies.find(lobby => lobby.id == lobbyId);
         if (lobby != undefined) {
-            socket.to(lobby.id).emit("updateLobby", {
+            socket.to(lobby.id).emit(SocketEmitEvent.UpdateLobby, {
                 id: lobby.id,
                 name: lobby.name,
                 isPrivate: lobby.isPrivate,
@@ -100,8 +101,8 @@ export const SocketController = (socket) => {
         }
     });
 
-    socket.on("disconnect", () => {
-        console.log("Socket " + socket.id + " left");
+    socket.on(SocketOnEvent.Disconnect, () => {
+        console.log(`Disconnect: ${socket.id}`);
         lobbies.forEach(lobby => {
             lobby.leave(socket.id);
             if (lobby.players.length <= 0) {
@@ -110,7 +111,7 @@ export const SocketController = (socket) => {
             }
 
             socket.leave(lobby.id);
-            socket.to(lobby.id).emit("updateLobby", {
+            socket.to(lobby.id).emit(SocketEmitEvent.UpdateLobby, {
                 id: lobby.id,
                 name: lobby.name,
                 isPrivate: lobby.isPrivate,
@@ -120,6 +121,6 @@ export const SocketController = (socket) => {
             });
         });
 
-        socket.broadcast.emit("updateLobbies");
+        socket.broadcast.emit(SocketEmitEvent.UpdateLobbies);
     });
 };
