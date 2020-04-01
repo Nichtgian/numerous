@@ -4,7 +4,7 @@ export interface Type<T> {
     new(...args: any[]): T;
 }
 
-export const Injectable = (): GenericClassDecorator<Type<any>> => {
-    return (target: Type<any>) => {
+export const Injectable = (): GenericClassDecorator<Type<object>> => {
+    return (target: Type<object>) => {
     };
 };

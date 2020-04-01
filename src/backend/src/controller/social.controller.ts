@@ -26,7 +26,7 @@ export class SocialController implements ISocialController {
         this._messageService = messageService;
     }
 
-    @Route(HttpMethod.Get, "/addFriendAsync")
+    @Route(HttpMethod.Get, "/addFriendAsync/:id")
     public async addFriendAsync(req: Request, res: Response): Promise<Response> {
         const token = req.headers.authorization;
         const friendId = req.params.id;
@@ -54,19 +54,19 @@ export class SocialController implements ISocialController {
         }
     }
 
-    @Route(HttpMethod.Get, "/searchUserAsync")
+    @Route(HttpMethod.Get, "/searchUserAsync/:id")
     public async searchUserAsync(req: Request, res: Response): Promise<Response> {
         const username = req.params.id;
 
         try {
-            const user = await this._userService.getSingleByAsync({ username: username});
+            const user = await this._userService.getSingleByAsync({ username: username });
             res.send(UserMapper.toDTO(user));
         } catch {
             return res.status(HttpStatusCode.Error).send();
         }
     }
 
-    @Route(HttpMethod.Get, "/searchUserAndChatAsync")
+    @Route(HttpMethod.Post, "/searchUserAndChatAsync")
     public async searchUserAndChatAsync(req: Request, res: Response): Promise<Response> {
         const username = req.body.username;
         const withUserId = req.body.withUserId;
@@ -101,7 +101,7 @@ export class SocialController implements ISocialController {
         }
     }
 
-    @Route(HttpMethod.Get, "/removeFriendAsync")
+    @Route(HttpMethod.Get, "/removeFriendAsync/:id")
     public async removeFriendAsync(req: Request, res: Response): Promise<Response> {
         const token = req.headers.authorization;
         const friendId = req.params.id;
@@ -115,7 +115,7 @@ export class SocialController implements ISocialController {
         }
     }
 
-    @Route(HttpMethod.Get, "/sendMessageAsync")
+    @Route(HttpMethod.Post, "/sendMessageAsync")
     public async sendMessageAsync(req: Request, res: Response): Promise<Response> {
         const token = req.headers.authorization;
         const { receiverId, text } = req.body;
@@ -129,7 +129,7 @@ export class SocialController implements ISocialController {
         }
     }
 
-    @Route(HttpMethod.Get, "/markMessagesAsReadAsync")
+    @Route(HttpMethod.Post, "/markMessagesAsReadAsync")
     public async markMessagesAsReadAsync(req: Request, res: Response): Promise<Response> {
         const token = req.headers.authorization;
 

@@ -4,14 +4,13 @@ import { UserEntity } from "../model/entity/user.entity";
 import { TokenHelper } from "../helper/token.helper";
 import { BaseService } from "./base.service";
 import { HttpStatusCode } from "../helper/enum/httpStatusCode.enum";
-import { Connection } from "typeorm";
 import { Injectable } from "../helper/injection/injectable.decorator";
 
 @Injectable()
 export class UserService extends BaseService<UserEntity> {
 
-    public constructor(connection: Connection) {
-        super(connection, UserEntity);
+    public constructor() {
+        super(UserEntity);
     }
 
     public async registerUserAsync(username, password): Promise<void> {

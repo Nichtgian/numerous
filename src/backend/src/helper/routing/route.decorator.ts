@@ -2,7 +2,7 @@ import { IRouteDefinition } from "./IRouteDefinition";
 import { HttpMethod } from "../enum/httpMethod.enum";
 import { GeneralHelper } from "../general.helper";
 
-export const Route = (method: HttpMethod, url: string): MethodDecorator => {
+export const Route = (method: HttpMethod, path: string): MethodDecorator => {
     return (target: any, propertyKey: string): void => {
         if (!Reflect.hasMetadata(GeneralHelper.routeMeta, target.constructor)) 
             Reflect.defineMetadata(GeneralHelper.routeMeta, [], target.constructor);
@@ -11,7 +11,7 @@ export const Route = (method: HttpMethod, url: string): MethodDecorator => {
 
         routes.push({
             method: method,
-            url: url,
+            path: path,
             name: propertyKey
         });
 

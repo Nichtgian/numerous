@@ -11,7 +11,7 @@ import { SocketController } from "./controller/socket.controller";
 import { LoginController } from "./controller/login.controller";
 import { IRouteDefinition } from "./helper/routing/IRouteDefinition";
 import { SocialController } from "./controller/social.controller";
-import { Inject } from "./helper/injection/inject";
+import { Injector } from "./helper/injection/injector";
 
 const app = express();
 const server = require("http").Server(app);
@@ -35,17 +35,13 @@ createConnection().then(async (connection: Connection) => {
     ];
 
     controllers.forEach(controller => {
-        console.log(controller);
-        const instance = Inject.resolve<LoginController>(controller);
+        const instance = Injector.resolve<typeof controller>(controller);
         const prefix: string = Reflect.getMetadata(GeneralHelper.prefixMeta, controller);
         const routes: IRouteDefinition[] = Reflect.getMetadata(GeneralHelper.routeMeta, controller);
-        console.log("PREFIX:"+prefix);
         
         routes.forEach(route => {
-            app[route.method](`/api${prefix}${route.url}`, (req: express.Request, res: express.Response, next: Function) => {
-                instance[route.method](req, res)
-                    .then(() => next)
-                    .catch(err => next(err))
+            app[route.method](`/api${prefix}${route.path}`, (req: express.Request, res: express.Response, next: Function) => {
+                instance[route.name](req, res);
             });
         });
     });

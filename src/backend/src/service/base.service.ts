@@ -1,12 +1,12 @@
-import { Repository, Connection } from "typeorm";
+import { Repository, getConnection } from "typeorm";
 import { BaseEntity } from "../model/entity/base.entity";
 
 export abstract class BaseService<Entity extends BaseEntity> {
 
     private _repository: Repository<Entity>;
 
-    public constructor(connection: Connection, Entity) {
-        this._repository = connection.getRepository(Entity);
+    public constructor(Entity) {
+        this._repository = getConnection().getRepository(Entity);
     }  
 
     public getRepository(): Repository<Entity> {

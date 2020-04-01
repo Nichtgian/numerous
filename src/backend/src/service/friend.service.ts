@@ -1,7 +1,6 @@
 import { UserService } from "./user.service";
 import { FriendEntity } from "../model/entity/friend.entity";
 import { BaseService } from "./base.service";
-import { Connection } from "typeorm";
 import { Injectable } from "../helper/injection/injectable.decorator";
 
 @Injectable()
@@ -9,8 +8,8 @@ export class FriendService extends BaseService<FriendEntity> {
 
     private _userService: UserService;
 
-    public constructor(connection: Connection, userService: UserService) {
-        super(connection, FriendEntity);
+    public constructor(userService: UserService) {
+        super(FriendEntity);
         this._userService = userService;
     }
 

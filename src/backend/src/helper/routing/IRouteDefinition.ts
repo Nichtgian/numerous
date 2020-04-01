@@ -1,7 +1,7 @@
 import { HttpMethod } from "../enum/httpMethod.enum";
 
 export interface IRouteDefinition {
-    url: string;
+    path: string;
     method: HttpMethod.Get | HttpMethod.Post;
     name: string;
 }
