@@ -85,108 +85,109 @@
 </template>
 
 <script>
-    import CreateLobby from "./CreateLobby";
-    import Store from "../store";
-    import { SocialService } from "../services/socialService";
+import CreateLobby from "./CreateLobby";
+import Store from "../helper/store";
+import SocialService from "../services/socialService";
+import { SocketEmitEventRoute } from "../helper/enum/socketEmitEventRoute";
 
-    export default {
-        name: "Numerous",
-        components: {
-            CreateLobby
+export default {
+    name: "Numerous",
+    components: {
+        CreateLobby
+    },
+    data: () => {
+        return {
+            isConnected: false,
+            lobbies: [],
+            newLobbyData: {
+                name: "",
+                password: "",
+                isPrivate: false,
+            },
+            showCreateLobby: false,
+            joinedLobbyData: null,
+            player: null,
+            isPlayerLeader: false
+        }
+    },
+    created() {
+        this.getLobbies();
+    },
+    sockets: {
+        connect() {
+            this.isConnected = true;
         },
-        data: () => {
-            return {
-                isConnected: false,
-                lobbies: [],
-                newLobbyData: {
-                    name: "",
-                    password: "",
-                    isPrivate: false,
-                },
-                showCreateLobby: false,
-                joinedLobbyData: null,
-                player: null,
-                isPlayerLeader: false
+        disconnect() {
+            this.isConnected = false;
+        },
+        createdLobby(lobby) {
+            this.joinLobbyWithPassword(lobby.id, lobby.password);
+        },
+        allLobbies(data) {
+            this.lobbies = data;
+        },
+        joinedLobby(data) {
+            this.joinedLobbyData = data.lobby;
+            this.player = data.player;
+            this.isPlayerLeader =  this.joinedLobbyData.leaderId == this.player.id;
+        },
+        leftLobby() {
+            this.joinedLobbyData = null;
+            this.player = null;
+            this.isPlayerLeader =  false;
+            this.$socket.emit(SocketEmitEventRoute.getLobbies);
+        },
+        updateLobbies() {
+            this.$socket.emit(SocketEmitEventRoute.getLobbies);
+        },
+        updateLobby(data) {
+            this.joinedLobbyData = data;
+            this.isPlayerLeader =  this.joinedLobbyData.leaderId == this.player.id;
+        }
+    },
+    methods: {
+        getLobbies() {
+            this.$socket.emit(SocketEmitEventRoute.getLobbies);
+        },
+        createLobby() {
+            this.$socket.emit(SocketEmitEventRoute.createLobby, this.newLobbyData);
+            this.newLobbyData = { name: "", isPrivate: false, password: "" };
+        },
+        joinLobby(lobby) {
+            let username = Store.state.user.username;
+            let password = "";
+            if (lobby.isPrivate) {
+                password = prompt("Enter password", "");
             }
-        },
-        created() {
-            this.getLobbies();
-        },
-        sockets: {
-            connect() {
-                this.isConnected = true;
-            },
-            disconnect() {
-                this.isConnected = false;
-            },
-            createdLobby(lobby) {
-                this.joinLobbyWithPassword(lobby.id, lobby.password);
-            },
-            allLobbies(data) {
-                this.lobbies = data;
-            },
-            joinedLobby(data) {
-                this.joinedLobbyData = data.lobby;
-                this.player = data.player;
-                this.isPlayerLeader =  this.joinedLobbyData.leaderId == this.player.id;
-            },
-            leftLobby() {
-                this.joinedLobbyData = null;
-                this.player = null;
-                this.isPlayerLeader =  false;
-                this.$socket.emit("getLobbies");
-            },
-            updateLobbies() {
-                this.$socket.emit("getLobbies");
-            },
-            updateLobby(data) {
-                this.joinedLobbyData = data;
-                this.isPlayerLeader =  this.joinedLobbyData.leaderId == this.player.id;
-            }
-        },
-        methods: {
-            getLobbies() {
-                this.$socket.emit("getLobbies");
-            },
-            createLobby() {
-                this.$socket.emit("createLobby", this.newLobbyData);
-                this.newLobbyData = { name: "", isPrivate: false, password: "" };
-            },
-            joinLobby(lobby) {
-                let username = Store.state.user.username;
-                let password = "";
-                if (lobby.isPrivate) {
-                    password = prompt("Enter password", "");
-                }
 
-                this.$socket.emit("joinLobby", lobby.id, username, password);
-            },
-            joinLobbyWithPassword(lobby, password) {
-                let username = Store.state.user.username;
-                this.$socket.emit("joinLobby", lobby, username, password);
-            },
-            leaveLobby() {
-                if (this.joinedLobbyData != null) {
-                    this.$socket.emit("leaveLobby", this.joinedLobbyData.id);
-                }
-            },
-            openChat(username) {
-                if (Store.state.user.username != username) {
-                    return (SocialService.searchUser(username)
-                        .then((response) => {
-                            const foundUser = response.data;
-                            this.$emit("openUserProfile", foundUser.id);
-                        }).catch(() => {
-                        }));
-                }
-            },
-            refreshLobby() {
-                if (this.joinedLobbyData != null) {
-                    this.$socket.emit("refreshLobby", this.joinedLobbyData.id);
-                }
-            },
-            startGame() {
+            this.$socket.emit(SocketEmitEventRoute.joinLobby, lobby.id, username, password);
+        },
+        joinLobbyWithPassword(lobby, password) {
+            let username = Store.state.user.username;
+            this.$socket.emit(SocketEmitEventRoute.joinLobby, lobby, username, password);
+        },
+        leaveLobby() {
+            if (this.joinedLobbyData != null) {
+                this.$socket.emit(SocketEmitEventRoute.leaveLobby, this.joinedLobbyData.id);
             }
+        },
+        openChat(username) {
+            if (Store.state.user.username != username) {
+                return (SocialService.searchUser(username)
+                    .then((response) => {
+                        const foundUser = response.data;
+                        this.$emit(SocketEmitEventRoute.openUserProfile, foundUser.id);
+                    }).catch(() => {
+                    }));
+            }
+        },
+        refreshLobby() {
+            if (this.joinedLobbyData != null) {
+                this.$socket.emit(SocketEmitEventRoute.refreshLobby, this.joinedLobbyData.id);
+            }
+        },
+        startGame() {
         }
     }
+}
 </script>

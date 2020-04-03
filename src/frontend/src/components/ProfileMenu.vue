@@ -139,7 +139,7 @@
                     this.text = "";
                     this.loading = false;
 
-                    this.$socket.emit("sendMessage", this.user.username);
+                    this.$socket.emit(SocketEmitEvent.sendMessage, this.user.username);
                 }));
             }
         }

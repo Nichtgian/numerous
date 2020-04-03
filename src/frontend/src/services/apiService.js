@@ -1,7 +1,7 @@
 import axios from "axios";
 import { TokenService, StorageIdentifier } from "./tokenService";
 
-const ApiService = {
+export const ApiService = {
     init(baseURL) {
         axios.defaults.baseURL = baseURL;
     },
@@ -34,5 +34,3 @@ const ApiService = {
         return axios(data);
     }
 };
-
-export default ApiService

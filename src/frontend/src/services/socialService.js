@@ -1,25 +1,24 @@
 import ApiService from "./apiService";
-import Store from "../store";
+import Store from "../helper/store";
 
-const SocialService = {
-    getFriends: async function() {
-        return await ApiService.get("social/getFriends");
+export const SocialService = {
+    baseURL: "/social",
+    getFriendsAsync: async () => {
+        return await ApiService.get(`${baseURL}/getFriendsAsync`);
     },
-    searchUser: async function(username) {
-        return await ApiService.get("social/searchUser/" + username);
+    searchUserAsync: async (username) => {
+        return await ApiService.get(`${baseURL}/searchUserAsync/${username}`);
     },
-    getUserAndChat: async function(userId) {
-        return await ApiService.post("social/searchUserAndChat", { username: Store.state.user.username, withUserId: userId });
+    getUserAndChatAsync: async (userId) => {
+        return await ApiService.post(`${baseURL}/searchUserAndChatAsync`, { username: Store.state.user.username, withUserId: userId });
     },
-    addFriend: async function(userId) {
-        return await ApiService.get("social/addFriend/" + userId);
+    addFriendAsync: async (userId) => {
+        return await ApiService.get(`${baseURL}/addFriendAsync/${userId}`);
     },
-    removeFriend: async function(userId) {
-        return await ApiService.get("social/removeFriend/" + userId);
+    removeFriendAsync: async (userId) => {
+        return await ApiService.get(`${baseURL}/removeFriendAsync/${userId}`);
     },
-    sendMessage: async function(receiverId, text) {
-        return await ApiService.post("social/sendMessage", { receiverId: receiverId, text: text });
+    sendMessageAsync: async (receiverId, text) => {
+        return await ApiService.post(`${baseURL}/sendMessageAsync`, { receiverId: receiverId, text: text });
     }
 };
-
-export { SocialService }

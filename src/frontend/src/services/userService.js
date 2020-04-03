@@ -1,11 +1,11 @@
 import ApiService from "./apiService";
 import { TokenService, StorageIdentifier } from "./tokenService";
-import Store from "../store/index";
+import Store from "../helper/store";
 
-const UserService = {
-    login: async function(username, password) {
+export const UserService = {
+    loginAsync: async (username, password) => {
         try {
-            const response = await ApiService.post("login", { username: username, password: password });
+            const response = await ApiService.post("loginAsync", { username: username, password: password });
             const token = response.data.token;
 
             TokenService.saveToken(StorageIdentifier.tokenKey, token);
@@ -25,7 +25,7 @@ const UserService = {
         }
     },
 
-    guestLogin: function() {
+    guestLogin: () => {
         const username = this.generateRandomName();
 
         Store.state.authenticated = true;
@@ -38,7 +38,7 @@ const UserService = {
         return username;
     },
 
-    generateRandomName: function() {
+    generateRandomName: () => {
         const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         let name = "";
         for (let i = 0; i < 15; i++) {
@@ -47,8 +47,8 @@ const UserService = {
         return name;
     },
 
-    register: async function(username, password) {
-        await ApiService.post("register", {
+    registerAsync: async (username, password) => {
+        await ApiService.post("registerAsync", {
             username: username,
             password: password
         }).then(() => {
@@ -57,7 +57,7 @@ const UserService = {
         });
     },
 
-    refreshToken: async function() {
+    refreshTokenAsync: async () => {
         const refreshToken = TokenService.getToken(StorageIdentifier.refreshTokenKey);
 
         const requestData = {
@@ -98,5 +98,3 @@ const UserService = {
         };
     }
 };
-
-export { UserService }

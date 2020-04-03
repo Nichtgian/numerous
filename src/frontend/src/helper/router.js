@@ -1,12 +1,14 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home";
-import Store from "../store/index";
+import Store from "./store";
 
 Vue.use(VueRouter);
 
+const viewPath = "../views";
+
 function beforeEnterCheck(to, from, next) {
-  if(Store.state.authenticated == true) {
+  if (Store.state.authenticated) {
     next();
   } else {
     next("/login");
@@ -17,7 +19,7 @@ const routes = [
   {
     path: "*",
     name: "notFound",
-    component: () => import("../views/NotFound"),
+    component: () => import(`${viewPath}/NotFound`),
   },
   {
     path: "/",
@@ -28,17 +30,16 @@ const routes = [
   {
     path: "/login",
     name: "login",
-    component: () => import("../views/Login")
+    component: () => import(`${viewPath}/Login`)
   },
   {
     path: "/register",
     name: "register",
-    component: () => import("../views/Register")
+    component: () => import(`${viewPath}/Register`)
   }
 ];
 
-const router = new VueRouter({
+export default new VueRouter({
   routes
 });
 
-export default router;
