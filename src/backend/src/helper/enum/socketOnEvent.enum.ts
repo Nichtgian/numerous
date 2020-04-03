@@ -5,5 +5,5 @@ export enum SocketOnEvent {
     LeaveLobby = "leaveLobby",
     RefreshLobby = "refreshLobby",
     SendMessage = "sendMessage",
-    Disconnect = "disconnect",
+    Disconnect = "disconnect"
 }

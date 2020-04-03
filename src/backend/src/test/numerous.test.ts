@@ -1,13 +1,16 @@
 import { Card } from "../model/logic/numerous/card";
 import { Numerous } from "../model/logic/numerous/numerous";
+import { BaseTest } from "./base.test";
+import { Injectable } from "../helper/injection/injectable.decorator";
 
-export class TestNumerous {
+@Injectable()
+export class NumerousTest extends BaseTest {
 
-    static runAllTests() {
-        TestNumerous.test_Numerous_IsCardPlayable();
+    public runAllTests() {
+        this.test_Numerous_IsCardPlayable();
     }
 
-    static test_Numerous_IsCardPlayable() {
+    public test_Numerous_IsCardPlayable() {
         const suits = Numerous.suits;
         const ranks = Numerous.ranks;
 

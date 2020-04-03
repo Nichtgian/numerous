@@ -5,5 +5,5 @@ export enum SocketEmitEvent {
     JoinedLobby = "joinedLobby",
     LeftLobby = "leftLobby",
     UpdateLobby = "updateLobby",
-    NewMessage = "newMessage",
+    NewMessage = "newMessage"
 }

@@ -1,20 +1,15 @@
 import { UserDTO } from "../../model/dto/user.dto";
 import { UserEntity } from "../../model/entity/user.entity";
+import { IMapper } from "./IMapper";
+import { Injectable } from "../injection/injectable.decorator";
 
-// Todo-go: Try implementing extension method
-export class UserMapper{
+@Injectable()
+export class UserMapper implements IMapper<UserDTO, UserEntity> {
 
-    public static toDTO(entity: UserEntity): UserDTO {
+    public toDTO(entity: UserEntity): UserDTO {
         if (entity == null)
             return null;
 
         return new UserDTO(entity);
     }
-
-    // public static toEntity(dto: UserDTO): UserEntity {
-    //     if (dto == null)
-    //         return null;
-
-    //     return new UserEntity();
-    // }
 }

@@ -1,6 +1,5 @@
 import { BaseDTO } from "./base.dto";
 import { UserDTO } from "./user.dto";
-import { UserMapper } from "../../helper/mapper/user.mapper";
 import { FriendEntity } from "../entity/friend.entity";
 
 export class FriendDTO extends BaseDTO { 
@@ -12,8 +11,8 @@ export class FriendDTO extends BaseDTO {
   public constructor(entity: FriendEntity) {
     super(entity);
     this.userId = entity.user?.publicId;
-    this.user = UserMapper.toDTO(entity.user);
+    this.user = entity.user.toDTO();
     this.friendId = entity.friend?.publicId;
-    this.friend = UserMapper.toDTO(entity.friend);
+    this.friend = entity.friend.toDTO();
   }
 }

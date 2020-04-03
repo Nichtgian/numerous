@@ -3,9 +3,9 @@ import { BaseEntity } from "../model/entity/base.entity";
 
 export abstract class BaseService<Entity extends BaseEntity> {
 
-    private _repository: Repository<Entity>;
+    private readonly _repository: Repository<Entity>;
 
-    public constructor(Entity) {
+    protected constructor(Entity) {
         this._repository = getConnection().getRepository(Entity);
     }  
 
@@ -29,15 +29,18 @@ export abstract class BaseService<Entity extends BaseEntity> {
         return await this._repository.find({ where: filter, relations: relations });
     }
 
-    public async saveAsync(entity: Entity): Promise<Entity> {
-        return await this._repository.manager.save(entity);
-    }
-
     public async getSingleByAsync(filter: {} = {}): Promise<Entity> {
         return await this._repository.findOne(filter);
     }
 
     async getSingleByIncludeRelationsAsync(relations: string[], filter: {} = {}): Promise<Entity> {
         return await this._repository.findOne({ where: filter, relations: relations });
+    }
+
+    public async upsertAsync(entity: Entity): Promise<Entity> {
+        const existingEntity = this.getSingleByAsync({ publicId: entity.publicId });
+        if (existingEntity == null)
+
+        return await this._repository.manager.save(entity);
     }
 }

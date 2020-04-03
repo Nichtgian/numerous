@@ -1,9 +1,12 @@
 import { FriendEntity } from "../../model/entity/friend.entity";
 import { FriendDTO } from "../../model/dto/friend.dto";
+import { IMapper } from "./IMapper";
+import { Injectable } from "../injection/injectable.decorator";
 
-export class FriendMapper{
+@Injectable()
+export class FriendMapper implements IMapper<FriendDTO, FriendEntity> {
 
-    public static toDTO(entity: FriendEntity): FriendDTO {
+    public toDTO(entity: FriendEntity): FriendDTO {
         if (entity == null)
             return null;
 

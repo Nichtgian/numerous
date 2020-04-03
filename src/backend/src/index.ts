@@ -6,18 +6,21 @@ import * as cors from "cors";
 import { createConnection, Connection } from "typeorm";
 import { GeneralHelper } from "./helper/general.helper";
 import { HttpStatusCode } from "./helper/enum/httpStatusCode.enum";
-import { TestNumerous } from "./test/testNumerous";
+import { Test } from "./test/test";
 import { SocketController } from "./controller/socket.controller";
 import { LoginController } from "./controller/login.controller";
 import { IRouteDefinition } from "./helper/routing/IRouteDefinition";
 import { SocialController } from "./controller/social.controller";
 import { Injector } from "./helper/injection/injector";
+import { registerExtensionMethods } from "./helper/mapper/extensionMethods";
 
 const app = express();
 const server = require("http").Server(app);
 const io = require("socket.io")(server, {
     path: "/socket"
 });
+
+registerExtensionMethods();
 
 createConnection().then(async (connection: Connection) => {
     app.use(bodyParser.json());
@@ -53,4 +56,4 @@ createConnection().then(async (connection: Connection) => {
 
 }).catch(error => console.error(error));
 
-TestNumerous.runAllTests();
+Injector.resolve<Test>(Test).runAllTests();

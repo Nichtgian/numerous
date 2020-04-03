@@ -5,8 +5,6 @@ import { MessageService } from "../service/message.service";
 import { MessageEntity } from "../model/entity/message.entity";
 import { ISocialController } from "./ISocial.controller";
 import { HttpStatusCode } from "../helper/enum/httpStatusCode.enum";
-import { FriendMapper } from "../helper/mapper/friend.mapper";
-import { UserMapper } from "../helper/mapper/user.mapper";
 import { Controller } from "../helper/routing/controller.decorator";
 import { Route } from "../helper/routing/route.decorator";
 import { HttpMethod } from "../helper/enum/httpMethod.enum";
@@ -48,7 +46,7 @@ export class SocialController implements ISocialController {
             const decodedToken = UserService.verifyToken(token);
             const user = await this._userService.getSingleByAsync({ username: decodedToken.username });
             const friends = await this._friendService.getByIncludeRelationsAsync(["user", "friend"], { userId: user.id });
-            res.send(friends.map((friend) => FriendMapper.toDTO(friend)));
+            res.send(friends.map(friend => friend.toDTO()));
         } catch {
             return res.status(HttpStatusCode.Error).send();
         }
@@ -60,7 +58,7 @@ export class SocialController implements ISocialController {
 
         try {
             const user = await this._userService.getSingleByAsync({ username: username });
-            res.send(UserMapper.toDTO(user));
+            res.send(user.toDTO());
         } catch {
             return res.status(HttpStatusCode.Error).send();
         }
@@ -72,9 +70,9 @@ export class SocialController implements ISocialController {
         const withUserId = req.body.withUserId;
 
         try {
-            const user = UserMapper.toDTO(await this._userService.getSingleByIncludeRelationsAsync(["sentMessages", "receivedMessages"], { id: withUserId }));
-            const userFilter = UserMapper.toDTO(await this._userService.getSingleByAsync({ username: username }));
-            const friend = FriendMapper.toDTO(await this._friendService.getSingleByAsync({ userId: userFilter.id, friendId: user.id }));
+            const user = (await this._userService.getSingleByIncludeRelationsAsync(["sentMessages", "receivedMessages"], { id: withUserId })).toDTO();
+            const userFilter = (await this._userService.getSingleByAsync({ username: username })).toDTO();
+            const friend = (await this._friendService.getSingleByAsync({ userId: userFilter.id, friendId: user.id })).toDTO();
 
             let filteredSentMessages = [];
             let filteredReceivedMessages = [];
