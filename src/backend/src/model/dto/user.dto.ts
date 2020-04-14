@@ -2,8 +2,9 @@ import { BaseDTO } from "./base.dto";
 import { UserEntity } from "../entity/user.entity";
 import { FriendDTO } from "./friend.dto";
 import { MessageDTO } from "./message.dto";
+import { IEntityMapper } from "../../helper/mapper/IEntityMapper";
 
-export class UserDTO extends BaseDTO { 
+export class UserDTO extends BaseDTO implements IEntityMapper<UserDTO, UserEntity> {
   public username: string;
 
   public isFriendOf: FriendDTO[];
@@ -18,5 +19,13 @@ export class UserDTO extends BaseDTO {
     this.hasFriends = entity.hasFriends.map(x => x.toDTO());
     this.sentMessages = entity.sentMessages.map(x => x.toDTO());
     this.receivedMessages = entity.receivedMessages.map(x => x.toDTO());
+  }
+
+  public toEntity(): UserEntity {
+    return UserDTO.dtoToEntity(this);
+  }
+
+  public static dtoToEntity(dto: UserDTO): UserEntity {
+    throw "NotImplementedException";
   }
 }

@@ -12,15 +12,12 @@ import { LoginController } from "./controller/login.controller";
 import { IRouteDefinition } from "./helper/routing/IRouteDefinition";
 import { SocialController } from "./controller/social.controller";
 import { Injector } from "./helper/injection/injector";
-import { registerExtensionMethods } from "./helper/mapper/extensionMethods";
 
 const app = express();
 const server = require("http").Server(app);
 const io = require("socket.io")(server, {
     path: "/socket"
 });
-
-registerExtensionMethods();
 
 createConnection().then(async (connection: Connection) => {
     app.use(bodyParser.json());

@@ -2,9 +2,11 @@ import { Entity, Column, OneToMany, Index } from "typeorm";
 import { FriendEntity } from "./friend.entity";
 import { MessageEntity } from "./message.entity";
 import { BaseEntity } from "./base.entity";
+import { IDTOMapper } from "../../helper/mapper/IDTOMapper";
+import { UserDTO } from "../dto/user.dto";
 
 @Entity({name: "User"})
-export class UserEntity extends BaseEntity {
+export class UserEntity extends BaseEntity implements IDTOMapper<UserDTO, UserEntity> {
     @Index({ unique: true })
     @Column()
     username: string;
@@ -40,4 +42,15 @@ export class UserEntity extends BaseEntity {
         message => message.receiver
     )
     receivedMessages: MessageEntity[];
+
+    public toDTO(): UserDTO {
+        return UserEntity.entityToDTO(this);
+    }
+
+    public static entityToDTO(entity: UserEntity): UserDTO {
+        if (entity == null)
+            return null;
+
+        return new UserDTO(entity);
+    }
 }
