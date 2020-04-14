@@ -1,4 +1,4 @@
-import { Repository, getConnection } from "typeorm";
+import {Repository, getConnection, DeepPartial} from "typeorm";
 import { BaseEntity } from "../model/entity/base.entity";
 
 export abstract class BaseService<Entity extends BaseEntity> {
@@ -33,14 +33,29 @@ export abstract class BaseService<Entity extends BaseEntity> {
         return await this._repository.findOne(filter);
     }
 
-    async getSingleByIncludeRelationsAsync(relations: string[], filter: {} = {}): Promise<Entity> {
+    public async getSingleByIncludeRelationsAsync(relations: string[], filter: {} = {}): Promise<Entity> {
         return await this._repository.findOne({ where: filter, relations: relations });
     }
 
     public async upsertAsync(entity: Entity): Promise<Entity> {
-        const existingEntity = this.getSingleByAsync({ publicId: entity.publicId });
-        if (existingEntity == null)
+        const criteria = { publicId: entity.publicId };
+        const existingEntity = this.getSingleByAsync(criteria);
 
+        /*
+        if (existingEntity == null)
+            await this._repository.manager.insert(entity);
+        else
+            await this._repository.manager.update(criteria, entity);
+        */
+
+        return null;
+    }
+
+    public async saveAsync(entity: Entity): Promise<Entity> {
         return await this._repository.manager.save(entity);
+    }
+
+    public async deleteAsync(entity: Entity): Promise<Entity> {
+        return await this._repository.manager.remove(entity);
     }
 }

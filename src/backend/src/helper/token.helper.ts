@@ -6,4 +6,4 @@ export const TokenHelper: {
     jwtKey: "numeorus5405223822",
     jwtExpire: 600,
     algorithm: "HS256"
-}
+};

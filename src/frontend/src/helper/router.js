@@ -4,7 +4,6 @@ import Home from "../views/Home";
 import Store from "./store";
 
 Vue.use(VueRouter);
-
 const viewPath = "../views";
 
 function beforeEnterCheck(to, from, next) {

@@ -6,12 +6,12 @@ import * as cors from "cors";
 import { createConnection, Connection } from "typeorm";
 import { GeneralHelper } from "./helper/general.helper";
 import { HttpStatusCode } from "./helper/enum/httpStatusCode.enum";
-import { Test } from "./test/test";
 import { SocketController } from "./controller/socket.controller";
 import { LoginController } from "./controller/login.controller";
 import { IRouteDefinition } from "./helper/routing/IRouteDefinition";
 import { SocialController } from "./controller/social.controller";
 import { Injector } from "./helper/injection/injector";
+import { Test } from "./test/test";
 
 const app = express();
 const server = require("http").Server(app);

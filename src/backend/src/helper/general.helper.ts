@@ -10,4 +10,4 @@ export const GeneralHelper: {
     api: "/api/",
     prefixMeta: "prefix",
     routeMeta: "routes"
-}
+};

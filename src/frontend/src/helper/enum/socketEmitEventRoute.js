@@ -1,4 +1,4 @@
-const socketEmitEventRoute = {
+export const SocketEmitEventRoute = {
     createLobby: "createLobby",
     getLobbies: "getLobbies",
     joinLobby: "joinLobby",
@@ -7,5 +7,3 @@ const socketEmitEventRoute = {
     sendMessage: "sendMessage",
     disconnect: "disconnect"
 };
-
-export { socketEmitEventRoute as SocketEmitEventRoute }

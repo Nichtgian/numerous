@@ -1,6 +1,5 @@
 import { FriendEntity } from "../model/entity/friend.entity";
-import { FriendDTO } from "../model/dto/friend.dto";
-import { BaseTest } from "./base.test";
+import { BaseTest, Testee } from "./base.test";
 import { Injectable } from "../helper/injection/injectable.decorator";
 
 @Injectable()
@@ -11,11 +10,9 @@ export class MapperTest extends BaseTest {
     }
 
     public test_FriendMapper_ToDTO() {
-
         const friendEntity: FriendEntity = new FriendEntity();
         friendEntity.publicId = "Id";
-        const friendDTO: FriendDTO = friendEntity.toDTO();
-
-        super.should(friendDTO.id).be(friendEntity.publicId);
+        const testee = new Testee(friendEntity.toDTO());
+        testee.should("id").be(friendEntity.publicId);
     }
 }
