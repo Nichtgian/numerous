@@ -8,8 +8,21 @@ export class Testee {
         this._value = value;
     }
 
-    public should(propertyName: string = null): any {
-        const value = propertyName == null ? this._value : this._value[propertyName];
+    public property(name: string): any {
+        const value = this._value[name];
+
+        return {
+            should: function(): any {
+                return Testee.assertions(value);
+            }
+        };
+    }
+
+    public should(): any {
+        return Testee.assertions(this._value);
+    }
+
+    private static assertions(value: any): any {
         return {
             be: function(expected: any): boolean { return Testee.evaluateBe(value, expected); },
             notBe: function(expected: any): boolean { return Testee.evaluateNotBe(value, expected); }
