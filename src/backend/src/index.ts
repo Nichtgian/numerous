@@ -12,6 +12,7 @@ import { IRouteDefinition } from "./helper/routing/IRouteDefinition";
 import { SocialController } from "./controller/social.controller";
 import { Injector } from "./helper/injection/injector";
 import { Test } from "./test/test";
+import { ConsoleHelper } from "./helper/console/console.helper";
 
 const app = express();
 const server = require("http").Server(app);
@@ -49,7 +50,7 @@ createConnection().then(async (connection: Connection) => {
     io.on("connection", SocketController);
 
     server.listen(GeneralHelper.port);
-    console.info(`Backend running! port: ${GeneralHelper.port}`);
+    ConsoleHelper.info(`Backend running! port: ${GeneralHelper.port}`);
 
 }).catch(error => console.error(error));
 

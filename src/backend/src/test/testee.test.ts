@@ -9,6 +9,7 @@ export class TesteeTest extends BaseTest {
         this.test_shouldBe_simpleNumber();
         this.test_shouldNotBe_simpleNumber();
         this.test_shouldBe_simpleObject();
+        this.test_shouldNotBe_simpleObject();
     }
 
     public test_shouldBe_simpleString() {
@@ -39,5 +40,17 @@ export class TesteeTest extends BaseTest {
         testee.should().be(value);
         testee.should("pNumber").be(value.pNumber);
         testee.should("pString").be(value.pString);
+    }
+
+    public test_shouldNotBe_simpleObject() {
+        const value = {
+            pNumber: 30,
+            pString: "ObjTest2"
+        };
+        const testee = new Testee(value);
+
+        testee.should().notBe({ pNumber: 40, pString: "ObjTest2"});
+        testee.should("pNumber").notBe("30");
+        testee.should("pString").notBe(true);
     }
 }

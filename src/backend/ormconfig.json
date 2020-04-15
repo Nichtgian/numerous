@@ -5,7 +5,10 @@
    "username": "numerousSA",
    "password": "1234",
    "synchronize": true,
-   "logging": true,
+   "logging": false,
+   "options": {
+      "enableArithAbort": true
+   },
    "entities": [
       "src/model/entity/*entity.ts"
    ],
