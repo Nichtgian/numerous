@@ -1,11 +1,11 @@
 import Vue from "vue";
 import App from "./App.vue";
-import Router from "./helper/router";
-import Vuetify from "./helper/vuetify";
 import SocketIO from "socket.io-client";
 import VueSocketIO from "vue-socket.io";
-import ApiService from "@/services/apiService";
+import { ApiService } from "./services/apiService";
 import { TokenService, StorageIdentifier } from "@/services/tokenService";
+import { Router } from "./helper/router";
+import { Vuetify } from "./helper/vuetify";
 
 const apiUrl = "http://localhost:5000";
 Vue.config.productionTip = false;

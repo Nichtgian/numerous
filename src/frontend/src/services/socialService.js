@@ -1,4 +1,4 @@
-import ApiService from "./apiService";
+import { ApiService } from "./apiService";
 import Store from "../helper/store";
 
 export const SocialService = {

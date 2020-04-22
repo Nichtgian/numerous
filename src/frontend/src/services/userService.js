@@ -1,4 +1,4 @@
-import ApiService from "./apiService";
+import { ApiService } from "./apiService";
 import { TokenService, StorageIdentifier } from "./tokenService";
 import Store from "../helper/store";
 

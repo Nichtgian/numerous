@@ -1,7 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home";
-import Store from "./store";
+import { Store } from "./store";
 
 Vue.use(VueRouter);
 const viewPath = "../views";
@@ -38,7 +38,7 @@ const routes = [
   }
 ];
 
-export default new VueRouter({
+export const Router = new VueRouter({
   routes
 });
 
